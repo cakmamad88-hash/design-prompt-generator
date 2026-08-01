@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Prompt Generator Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .switch { position: relative; display: inline-block; width: 50px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #4f46e5; }
+        input:checked + .slider:before { transform: translateX(26px); }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen py-10 px-4">
+
+    <div class="max-w-3xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden">
+        <div class="gradient-bg p-8 text-white">
+            <h1 class="text-3xl font-bold">Design Prompt Generator</h1>
+            <p class="mt-2 text-indigo-100">Buat instruksi desain AI lengkap dengan kustomisasi penuh.</p>
+        </div>
+
+        <div class="p-8 space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700">Tipe Desain</label>
+                    <select id="type" class="w-full mt-2 p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none">
+                        <option value="Brosur">Brosur</option>
+                        <option value="Banner">Banner</option>
+                        <option value="Stiker">Stiker</option>
+                        <option value="Pamflet">Pamflet</option>
+                    </select>
+                </div>
+                <div class="flex gap-2">
+                    <div class="flex-1">
+                        <label class="block text-sm font-semibold text-gray-700">Lebar (cm)</label>
+                        <input type="number" id="width" value="21" class="w-full mt-2 p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none">
+                    </div>
+                    <div class="flex-1">
+                        <label class="block text-sm font-semibold text-gray-700">Tinggi (cm)</label>
+                        <input type="number" id="height" value="29.7" class="w-full mt-2 p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none">
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700">Gaya Visual</label>
+                    <select id="style" class="w-full mt-2 p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none">
+                        <option value="minimalist and modern">Minimalis & Modern</option>
+                        <option value="elegant and luxury">Elegan & Mewah</option>
+                        <option value="bold and crowded with vibrant elements">Ramai & Bersemangat</option>
+                        <option value="professional and corporate">Profesional & Korporat</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700">Tema Warna</label>
+                    <input type="text" id="color" placeholder="Contoh: Biru Muda dan Putih" class="w-full mt-2 p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none">
+                </div>
+            </div>
+
+            <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100">
+                <h2 class="text-xs font-bold text-indigo-900 mb-4 uppercase tracking-widest">Opsi Tambahan AI</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-700">Boleh Tambahkan Teks Lain (AI)</span>
+                        <label class="switch">
+                            <input type="checkbox" id="aiAllowText">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-700">Boleh Tambahkan Foto Lain (AI)</span>
+                        <label class="switch">
+                            <input type="checkbox" id="aiAllowPhoto">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <input type="text" id="mainText" placeholder="Teks Utama..." class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none">
+                <input type="text" id="tagline" placeholder="Tagline..." class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none">
+                <input type="text" id="wa" placeholder="Nomor WhatsApp..." class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none">
+                <input type="text" id="photoDescription" placeholder="Deskripsi Foto Utama..." class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none">
+                <input type="text" id="additionalPhoto" placeholder="Deskripsi Foto Tambahan..." class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none col-span-full">
+            </div>
+
+            <textarea id="listItems" placeholder="Daftar Tambahan (pisahkan dengan koma)..." class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none" rows="2"></textarea>
+            <textarea id="extraText" placeholder="Teks Tambahan / Catatan..." class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none" rows="2"></textarea>
+
+            <button onclick="generatePrompt()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl transition duration-300">
+                Generate Prompt
+            </button>
+
+            <div id="outputArea" class="hidden mt-6">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Prompt Hasil:</label>
+                <div class="bg-gray-100 p-4 rounded-xl border border-gray-200 text-gray-800 text-sm italic" id="promptResult"></div>
+                <button onclick="copyPrompt()" class="mt-4 w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-medium flex items-center justify-center gap-2">
+                    <span>Salin Prompt</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generatePrompt() {
+            const type = document.getElementById('type').value;
+            const w = document.getElementById('width').value;
+            const h = document.getElementById('height').value;
+            const style = document.getElementById('style').value;
+            const color = document.getElementById('color').value || "harmonious";
+            
+            const mainText = document.getElementById('mainText').value || "[Teks Utama]";
+            const tagline = document.getElementById('tagline').value || "[Tagline]";
+            const wa = document.getElementById('wa').value || "[Nomor WA]";
+            const photoDescription = document.getElementById('photoDescription').value;
+            const additionalPhoto = document.getElementById('additionalPhoto').value;
+            const listItems = document.getElementById('listItems').value;
+            const extraText = document.getElementById('extraText').value;
+
+            const allowAiText = document.getElementById('aiAllowText').checked;
+            const allowAiPhoto = document.getElementById('aiAllowPhoto').checked;
+
+            const prompt = `Create a professional high-quality ${type} design. 
+            Dimensions: ${w}cm x ${h}cm. 
+            Style: ${style}. 
+            Color Palette: ${color} theme. 
+            Key Content: Main Text "${mainText}", Tagline "${tagline}", Contact Info ${wa}. 
+            ${photoDescription ? 'Specific User Image/Object to include: ' + photoDescription + '. ' : ''}
+            ${additionalPhoto ? 'Additional image/photo detail: ' + additionalPhoto + '. ' : ''}
+            ${listItems ? 'Include following list items: ' + listItems + '. ' : ''}
+            ${extraText ? 'Additional notes: ' + extraText + '. ' : ''}
+            ${allowAiText ? 'AI is encouraged to generate creative supporting text elements to enhance the design. ' : 'Stick strictly to user provided text. '}
+            ${allowAiPhoto ? 'AI is encouraged to add relevant decorative images or photos to enhance the design. ' : 'Do not add extra decorative images. '}
+            The layout should be clean, balanced, with modern typography and visually appealing graphics that represent the content. High resolution, 8k, photorealistic style.`;
+
+            document.getElementById('promptResult').innerText = prompt;
+            document.getElementById('outputArea').classList.remove('hidden');
+        }
+
+        function copyPrompt() {
+            const text = document.getElementById('promptResult').innerText;
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-9999px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    alert("Prompt berhasil disalin ke clipboard!");
+                } else {
+                    alert("Gagal menyalin. Harap salin manual.");
+                }
+            } catch (err) {
+                alert("Terjadi kesalahan saat menyalin.");
+            }
+            document.body.removeChild(textArea);
+        }
+    </script>
+</body>
+</html>

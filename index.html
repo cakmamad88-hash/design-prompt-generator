@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Design Prompt Generator Pro</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://tailwindcss.com"></script>
+    <link href="https://googleapis.com" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
         .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
@@ -20,10 +20,37 @@
 </head>
 <body class="bg-gray-50 min-h-screen py-10 px-4">
 
-    <div class="max-w-3xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden">
-        <div class="gradient-bg p-8 text-white">
-            <h1 class="text-3xl font-bold">Design Prompt Generator</h1>
-            <p class="mt-2 text-indigo-100">Buat instruksi desain AI lengkap dengan kustomisasi penuh.</p>
+    <!-- LAYAR KUNCI PASSWORD -->
+    <div id="loginOverlay" class="fixed inset-0 bg-gray-900/80 backdrop-blur-sm flex items-center justify-center z-50 px-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden">
+            <div class="gradient-bg p-6 text-white text-center">
+                <h2 class="text-2xl font-bold">Akses Terbatas</h2>
+                <p class="text-sm text-indigo-100 mt-1">Masukkan password untuk menggunakan generator</p>
+            </div>
+            <form onsubmit="checkPassword(event)" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+                    <input type="password" id="passwordInput" placeholder="Masukkan password..." required
+                        class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none">
+                </div>
+                <p id="errorMsg" class="text-red-500 text-xs hidden">Password salah. Silakan coba lagi.</p>
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition duration-300">
+                    Masuk
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- KONTEN UTAMA WEBSITE -->
+    <div id="mainApp" class="hidden max-w-3xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden">
+        <div class="gradient-bg p-8 text-white flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold">Design Prompt Generator</h1>
+                <p class="mt-2 text-indigo-100">Buat instruksi desain AI lengkap dengan kustomisasi penuh.</p>
+            </div>
+            <button onclick="logout()" class="bg-white/20 hover:bg-white/30 text-white text-xs font-semibold px-4 py-2 rounded-xl transition">
+                Kunci
+            </button>
         </div>
 
         <div class="p-8 space-y-6">
@@ -111,46 +138,33 @@
     </div>
 
     <script>
-        function generatePrompt() {
-            const type = document.getElementById('type').value;
-            const w = document.getElementById('width').value;
-            const h = document.getElementById('height').value;
-            const style = document.getElementById('style').value;
-            const color = document.getElementById('color').value || "harmonious";
-            
-            const mainText = document.getElementById('mainText').value || "[Teks Utama]";
-            const tagline = document.getElementById('tagline').value || "[Tagline]";
-            const wa = document.getElementById('wa').value || "[Nomor WA]";
-            const photoDescription = document.getElementById('photoDescription').value;
-            const additionalPhoto = document.getElementById('additionalPhoto').value;
-            const listItems = document.getElementById('listItems').value;
-            const extraText = document.getElementById('extraText').value;
+        // GANTI PASSWORD DI BARIS BERIKUT:
+        const PASSWORD_BENAR = "admin123";
 
-            const allowText = document.getElementById('aiAllowText').checked;
-            const allowPhoto = document.getElementById('aiAllowPhoto').checked;
-
-            let prompt = `Create a ${style} ${type} design with dimensions ${w}cm x ${h}cm, using a ${color} color palette.\n\n`;
-            prompt += `Key Content: Main Text "${mainText}", Tagline "${tagline}", Contact Info ${wa}.\n`;
-
-            if (listItems.trim() !== "") {
-                prompt += `Additional list items to include: ${listItems}.\n`;
+        // Cek status login saat halaman dimuat
+        window.onload = function() {
+            if (sessionStorage.getItem("isLoggedIn") === "true") {
+                unlockApp();
             }
-            if (extraText.trim() !== "") {
-                prompt += `Extra notes/text: ${extraText}.\n`;
-            }
-            if (photoDescription.trim() !== "") {
-                prompt += `\nMain image/photo detail: ${photoDescription}.\n`;
-            }
-            if (additionalPhoto.trim() !== "") {
-                prompt += `Additional image/photo detail: ${additionalPhoto}.\n`;
-            }
+        };
 
-            prompt += `\n${allowText ? "AI is allowed to add relevant supporting text or headlines." : "Stick strictly to user provided text."}\n`;
-            prompt += `${allowPhoto ? "AI is encouraged to add relevant decorative images or photos to enhance the design." : "Use only the described photos without adding extra subjects."}\n`;
-            prompt += `The layout should be clean, balanced, with modern typography and visually appealing graphics that represent the content. High resolution, 8k, photorealistic style.`;
+        function checkPassword(event) {
+            event.preventDefault();
+            const input = document.getElementById("passwordInput").value;
+            const errorMsg = document.getElementById("errorMsg");
 
-            document.getElementById('promptResult').textContent = prompt;
-            document.getElementById('outputArea').classList.remove('hidden');
+            if (input === PASSWORD_BENAR) {
+                sessionStorage.setItem("isLoggedIn", "true");
+                errorMsg.classList.add("hidden");
+                unlockApp();
+            } else {
+                errorMsg.classList.remove("hidden");
+            }
         }
 
-        function copyPrompt() {
+        function unlockApp() {
+            document.getElementById("loginOverlay").classList.add("hidden");
+            document.getElementById("mainApp").classList.remove("hidden");
+        }
+
+        function logout() {

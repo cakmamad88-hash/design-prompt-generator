@@ -5,118 +5,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Design Prompt Generator Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
-        body { background-color: #f3f4f6; min-height: 100vh; padding: 40px 16px; color: #1f2937; }
-        .hidden { display: none !important; }
-        
-        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
-        .card { max-width: 768px; margin: 0 auto; background: white; border-radius: 24px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); overflow: hidden; }
-        
-        .overlay { position: fixed; inset: 0; background: rgba(17, 24, 39, 0.85); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 16px; }
-        .login-box { background: white; border-radius: 24px; max-width: 400px; width: 100%; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
-        .login-header { padding: 24px; text-align: center; }
-        .login-header h2 { font-size: 24px; font-weight: 700; }
-        .login-header p { font-size: 13px; color: #e0e7ff; margin-top: 4px; }
-        .login-body { padding: 24px; }
-
-        .main-header { padding: 32px; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
-        .main-header h1 { font-size: 28px; font-weight: 700; }
-        .main-header p { color: #e0e7ff; margin-top: 6px; font-size: 15px; }
-        .btn-lock { background: rgba(255,255,255,0.2); color: white; border: none; padding: 8px 16px; border-radius: 12px; font-weight: 600; font-size: 12px; cursor: pointer; }
-        .btn-lock:hover { background: rgba(255,255,255,0.3); }
-
-        .form-body { padding: 32px; display: flex; flex-direction: column; gap: 20px; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .flex-gap { display: flex; gap: 10px; }
-        .flex-1 { flex: 1; }
-        label { display: block; font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 8px; }
-        input[type="text"], input[type="number"], input[type="password"], select, textarea {
-            width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 12px; font-size: 14px; outline: none; transition: 0.2s;
-        }
-        input:focus, select:focus, textarea:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2); }
-        .col-full { grid-column: 1 / -1; }
-
-        .ai-box { background: #eef2ff; padding: 20px; border-radius: 16px; border: 1px solid #e0e7ff; }
-        .ai-box h2 { font-size: 12px; font-weight: 700; color: #312e81; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
-        .switch-row { display: flex; align-items: center; justify-content: space-between; font-size: 14px; color: #374151; }
-
-        .switch { position: relative; display: inline-block; width: 48px; height: 24px; flex-shrink: 0; }
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .switch { position: relative; display: inline-block; width: 50px; height: 24px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; inset: 0; background-color: #ccc; transition: .3s; border-radius: 24px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: #4f46e5; }
-        input:checked + .slider:before { transform: translateX(24px); }
-
-        .btn-primary { width: 100%; background: #4f46e5; color: white; border: none; padding: 15px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.2s; }
-        .btn-primary:hover { background: #4338ca; }
-        .btn-copy { width: 100%; background: #22c55e; color: white; border: none; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 12px; }
-        .btn-copy:hover { background: #16a34a; }
-
-        .result-box { background: #f3f4f6; padding: 16px; border-radius: 12px; border: 1px solid #e5e7eb; font-size: 14px; font-style: italic; white-space: pre-line; line-height: 1.5; }
-        .error-text { color: #ef4444; font-size: 13px; margin-top: 8px; }
-
-        @media (max-width: 640px) {
-            .grid-2 { grid-template-columns: 1fr; }
-            .main-header { flex-direction: column; align-items: flex-start; }
-        }
+        input:checked + .slider:before { transform: translateX(26px); }
     </style>
 </head>
-<body>
+<body class="bg-gray-50 min-h-screen py-10 px-4">
 
-    <!-- LAYAR KUNCI PASSWORD -->
-    <div id="loginOverlay" class="overlay">
-        <div class="login-box">
-            <div class="gradient-bg login-header">
-                <h2>Akses Terbatas</h2>
-                <p>Masukkan password untuk menggunakan generator</p>
-            </div>
-            <div class="login-body">
-                <label for="passwordInput">Password</label>
-                <input type="password" id="passwordInput" placeholder="Masukkan password...">
-                <p id="errorMsg" class="error-text hidden">Password salah. Silakan coba lagi.</p>
-                <button type="button" id="loginBtn" class="btn-primary" style="margin-top: 16px;">Masuk</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- KONTEN UTAMA WEBSITE -->
-    <div id="mainApp" class="card hidden">
-        <div class="gradient-bg main-header">
-            <div>
-                <h1>Design Prompt Generator</h1>
-                <p>Buat instruksi desain AI lengkap dengan kustomisasi penuh.</p>
-            </div>
-            <button type="button" id="logoutBtn" class="btn-lock">Kunci</button>
+    <div class="max-w-3xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden">
+        <div class="gradient-bg p-8 text-white">
+            <h1 class="text-3xl font-bold">Design Prompt Generator</h1>
+            <p class="mt-2 text-indigo-100">Buat instruksi desain AI lengkap dengan kustomisasi penuh.</p>
         </div>
 
-        <div class="form-body">
-            <div class="grid-2">
+        <div class="p-8 space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label>Tipe Desain</label>
-                    <select id="type">
+                    <label class="block text-sm font-semibold text-gray-700">Tipe Desain</label>
+                    <select id="type" class="w-full mt-2 p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none">
                         <option value="Brosur">Brosur</option>
                         <option value="Banner">Banner</option>
                         <option value="Stiker">Stiker</option>
                         <option value="Pamflet">Pamflet</option>
                     </select>
                 </div>
-                <div class="flex-gap">
+                <div class="flex gap-2">
                     <div class="flex-1">
-                        <label>Lebar (cm)</label>
-                        <input type="number" id="width" value="21">
+                        <label class="block text-sm font-semibold text-gray-700">Lebar (cm)</label>
+                        <input type="number" id="width" value="21" class="w-full mt-2 p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none">
                     </div>
                     <div class="flex-1">
-                        <label>Tinggi (cm)</label>
-                        <input type="number" id="height" value="29.7">
+                        <label class="block text-sm font-semibold text-gray-700">Tinggi (cm)</label>
+                        <input type="number" id="height" value="29.7" class="w-full mt-2 p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none">
                     </div>
                 </div>
             </div>
 
-            <div class="grid-2">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label>Gaya Visual</label>
-                    <select id="style">
+                    <label class="block text-sm font-semibold text-gray-700">Gaya Visual</label>
+                    <select id="style" class="w-full mt-2 p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none">
                         <option value="minimalist and modern">Minimalis & Modern</option>
                         <option value="elegant and luxury">Elegan & Mewah</option>
                         <option value="bold and crowded with vibrant elements">Ramai & Bersemangat</option>
@@ -124,23 +60,23 @@
                     </select>
                 </div>
                 <div>
-                    <label>Tema Warna</label>
-                    <input type="text" id="color" placeholder="Contoh: Biru Muda dan Putih">
+                    <label class="block text-sm font-semibold text-gray-700">Tema Warna</label>
+                    <input type="text" id="color" placeholder="Contoh: Biru Muda dan Putih" class="w-full mt-2 p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none">
                 </div>
             </div>
 
-            <div class="ai-box">
-                <h2>Opsi Tambahan AI</h2>
-                <div class="grid-2">
-                    <div class="switch-row">
-                        <span>Boleh Tambahkan Teks Lain (AI)</span>
+            <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100">
+                <h2 class="text-xs font-bold text-indigo-900 mb-4 uppercase tracking-widest">Opsi Tambahan AI</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-700">Boleh Tambahkan Teks Lain (AI)</span>
                         <label class="switch">
                             <input type="checkbox" id="aiAllowText">
                             <span class="slider"></span>
                         </label>
                     </div>
-                    <div class="switch-row">
-                        <span>Boleh Tambahkan Foto Lain (AI)</span>
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-700">Boleh Tambahkan Foto Lain (AI)</span>
                         <label class="switch">
                             <input type="checkbox" id="aiAllowPhoto">
                             <span class="slider"></span>
@@ -149,35 +85,72 @@
                 </div>
             </div>
 
-            <div class="grid-2">
-                <input type="text" id="mainText" placeholder="Teks Utama...">
-                <input type="text" id="tagline" placeholder="Tagline...">
-                <input type="text" id="wa" placeholder="Nomor WhatsApp...">
-                <input type="text" id="photoDescription" placeholder="Deskripsi Foto Utama...">
-                <input type="text" id="additionalPhoto" placeholder="Deskripsi Foto Tambahan..." class="col-full">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <input type="text" id="mainText" placeholder="Teks Utama..." class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none">
+                <input type="text" id="tagline" placeholder="Tagline..." class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none">
+                <input type="text" id="wa" placeholder="Nomor WhatsApp..." class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none">
+                <input type="text" id="photoDescription" placeholder="Deskripsi Foto Utama..." class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none">
+                <input type="text" id="additionalPhoto" placeholder="Deskripsi Foto Tambahan..." class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none col-span-full">
             </div>
 
-            <textarea id="listItems" placeholder="Daftar Tambahan (pisahkan dengan koma)..." rows="2"></textarea>
-            <textarea id="extraText" placeholder="Teks Tambahan / Catatan..." rows="2"></textarea>
+            <textarea id="listItems" placeholder="Daftar Tambahan (pisahkan dengan koma)..." class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none" rows="2"></textarea>
+            <textarea id="extraText" placeholder="Teks Tambahan / Catatan..." class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none" rows="2"></textarea>
 
-            <button type="button" id="generateBtn" class="btn-primary">Generate Prompt</button>
+            <button onclick="generatePrompt()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl transition duration-300">
+                Generate Prompt
+            </button>
 
-            <div id="outputArea" class="hidden">
-                <label>Prompt Hasil:</label>
-                <div class="result-box" id="promptResult"></div>
-                <button type="button" id="copyBtn" class="btn-copy">Salin Prompt</button>
+            <div id="outputArea" class="hidden mt-6">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Prompt Hasil:</label>
+                <div class="bg-gray-100 p-4 rounded-xl border border-gray-200 text-gray-800 text-sm italic whitespace-pre-line" id="promptResult"></div>
+                <button onclick="copyPrompt()" id="copyBtn" class="mt-4 w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-medium flex items-center justify-center gap-2 transition">
+                    <span>Salin Prompt</span>
+                </button>
             </div>
         </div>
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // GANTI PASSWORD DI BARIS BERIKUT:
-            const PASSWORD_BENAR = "admin123";
+        function generatePrompt() {
+            const type = document.getElementById('type').value;
+            const w = document.getElementById('width').value;
+            const h = document.getElementById('height').value;
+            const style = document.getElementById('style').value;
+            const color = document.getElementById('color').value || "harmonious";
+            
+            const mainText = document.getElementById('mainText').value || "[Teks Utama]";
+            const tagline = document.getElementById('tagline').value || "[Tagline]";
+            const wa = document.getElementById('wa').value || "[Nomor WA]";
+            const photoDescription = document.getElementById('photoDescription').value;
+            const additionalPhoto = document.getElementById('additionalPhoto').value;
+            const listItems = document.getElementById('listItems').value;
+            const extraText = document.getElementById('extraText').value;
 
-            const loginOverlay = document.getElementById("loginOverlay");
-            const mainApp = document.getElementById("mainApp");
-            const passwordInput = document.getElementById("passwordInput");
-            const errorMsg = document.getElementById("errorMsg");
-            const loginBtn = document.getElementById("loginBtn");
-            const logoutBtn = document.getElementById("logoutBtn");
+            const allowText = document.getElementById('aiAllowText').checked;
+            const allowPhoto = document.getElementById('aiAllowPhoto').checked;
+
+            let prompt = `Create a ${style} ${type} design with dimensions ${w}cm x ${h}cm, using a ${color} color palette.\n\n`;
+            prompt += `Key Content: Main Text "${mainText}", Tagline "${tagline}", Contact Info ${wa}.\n`;
+
+            if (listItems.trim() !== "") {
+                prompt += `Additional list items to include: ${listItems}.\n`;
+            }
+            if (extraText.trim() !== "") {
+                prompt += `Extra notes/text: ${extraText}.\n`;
+            }
+            if (photoDescription.trim() !== "") {
+                prompt += `\nMain image/photo detail: ${photoDescription}.\n`;
+            }
+            if (additionalPhoto.trim() !== "") {
+                prompt += `Additional image/photo detail: ${additionalPhoto}.\n`;
+            }
+
+            prompt += `\n${allowText ? "AI is allowed to add relevant supporting text or headlines." : "Stick strictly to user provided text."}\n`;
+            prompt += `${allowPhoto ? "AI is encouraged to add relevant decorative images or photos to enhance the design." : "Use only the described photos without adding extra subjects."}\n`;
+            prompt += `The layout should be clean, balanced, with modern typography and visually appealing graphics that represent the content. High resolution, 8k, photorealistic style.`;
+
+            document.getElementById('promptResult').textContent = prompt;
+            document.getElementById('outputArea').classList.remove('hidden');
+        }
+
+        function copyPrompt() {

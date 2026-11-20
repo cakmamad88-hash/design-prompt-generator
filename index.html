@@ -10,11 +10,9 @@
         body { background-color: #f3f4f6; min-height: 100vh; padding: 40px 16px; color: #1f2937; }
         .hidden { display: none !important; }
         
-        /* Gradient & Card */
         .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
         .card { max-width: 768px; margin: 0 auto; background: white; border-radius: 24px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); overflow: hidden; }
         
-        /* Login Overlay */
         .overlay { position: fixed; inset: 0; background: rgba(17, 24, 39, 0.85); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 16px; }
         .login-box { background: white; border-radius: 24px; max-width: 400px; width: 100%; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
         .login-header { padding: 24px; text-align: center; }
@@ -22,14 +20,12 @@
         .login-header p { font-size: 13px; color: #e0e7ff; margin-top: 4px; }
         .login-body { padding: 24px; }
 
-        /* Header Utama */
         .main-header { padding: 32px; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
         .main-header h1 { font-size: 28px; font-weight: 700; }
         .main-header p { color: #e0e7ff; margin-top: 6px; font-size: 15px; }
         .btn-lock { background: rgba(255,255,255,0.2); color: white; border: none; padding: 8px 16px; border-radius: 12px; font-weight: 600; font-size: 12px; cursor: pointer; }
         .btn-lock:hover { background: rgba(255,255,255,0.3); }
 
-        /* Form Layout */
         .form-body { padding: 32px; display: flex; flex-direction: column; gap: 20px; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .flex-gap { display: flex; gap: 10px; }
@@ -41,12 +37,10 @@
         input:focus, select:focus, textarea:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2); }
         .col-full { grid-column: 1 / -1; }
 
-        /* Opsi Tambahan Box */
         .ai-box { background: #eef2ff; padding: 20px; border-radius: 16px; border: 1px solid #e0e7ff; }
         .ai-box h2 { font-size: 12px; font-weight: 700; color: #312e81; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
         .switch-row { display: flex; align-items: center; justify-content: space-between; font-size: 14px; color: #374151; }
 
-        /* Toggle Switch */
         .switch { position: relative; display: inline-block; width: 48px; height: 24px; flex-shrink: 0; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; inset: 0; background-color: #ccc; transition: .3s; border-radius: 24px; }
@@ -54,13 +48,11 @@
         input:checked + .slider { background-color: #4f46e5; }
         input:checked + .slider:before { transform: translateX(24px); }
 
-        /* Buttons */
         .btn-primary { width: 100%; background: #4f46e5; color: white; border: none; padding: 15px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.2s; }
         .btn-primary:hover { background: #4338ca; }
         .btn-copy { width: 100%; background: #22c55e; color: white; border: none; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 12px; }
         .btn-copy:hover { background: #16a34a; }
 
-        /* Output & Error */
         .result-box { background: #f3f4f6; padding: 16px; border-radius: 12px; border: 1px solid #e5e7eb; font-size: 14px; font-style: italic; white-space: pre-line; line-height: 1.5; }
         .error-text { color: #ef4444; font-size: 13px; margin-top: 8px; }
 
@@ -79,12 +71,12 @@
                 <h2>Akses Terbatas</h2>
                 <p>Masukkan password untuk menggunakan generator</p>
             </div>
-            <form onsubmit="checkPassword(event)" class="login-body">
+            <div class="login-body">
                 <label for="passwordInput">Password</label>
-                <input type="password" id="passwordInput" placeholder="Masukkan password..." required>
+                <input type="password" id="passwordInput" placeholder="Masukkan password...">
                 <p id="errorMsg" class="error-text hidden">Password salah. Silakan coba lagi.</p>
-                <button type="submit" class="btn-primary" style="margin-top: 16px;">Masuk</button>
-            </form>
+                <button type="button" id="loginBtn" class="btn-primary" style="margin-top: 16px;">Masuk</button>
+            </div>
         </div>
     </div>
 
@@ -95,7 +87,7 @@
                 <h1>Design Prompt Generator</h1>
                 <p>Buat instruksi desain AI lengkap dengan kustomisasi penuh.</p>
             </div>
-            <button onclick="logout()" class="btn-lock">Kunci</button>
+            <button type="button" id="logoutBtn" class="btn-lock">Kunci</button>
         </div>
 
         <div class="form-body">
@@ -168,25 +160,24 @@
             <textarea id="listItems" placeholder="Daftar Tambahan (pisahkan dengan koma)..." rows="2"></textarea>
             <textarea id="extraText" placeholder="Teks Tambahan / Catatan..." rows="2"></textarea>
 
-            <button onclick="generatePrompt()" class="btn-primary">Generate Prompt</button>
+            <button type="button" id="generateBtn" class="btn-primary">Generate Prompt</button>
 
             <div id="outputArea" class="hidden">
                 <label>Prompt Hasil:</label>
                 <div class="result-box" id="promptResult"></div>
-                <button onclick="copyPrompt()" id="copyBtn" class="btn-copy">Salin Prompt</button>
+                <button type="button" id="copyBtn" class="btn-copy">Salin Prompt</button>
             </div>
         </div>
     </div>
 
     <script>
-        // GANTI PASSWORD DI BARIS BERIKUT:
-        const PASSWORD_BENAR = "admin123";
+        document.addEventListener("DOMContentLoaded", function() {
+            // GANTI PASSWORD DI BARIS BERIKUT:
+            const PASSWORD_BENAR = "admin123";
 
-        window.onload = function() {
-            if (sessionStorage.getItem("isLoggedIn") === "true") {
-                unlockApp();
-            }
-        };
-
-        function checkPassword(event) {
-            event.preventDefault();
+            const loginOverlay = document.getElementById("loginOverlay");
+            const mainApp = document.getElementById("mainApp");
+            const passwordInput = document.getElementById("passwordInput");
+            const errorMsg = document.getElementById("errorMsg");
+            const loginBtn = document.getElementById("loginBtn");
+            const logoutBtn = document.getElementById("logoutBtn");

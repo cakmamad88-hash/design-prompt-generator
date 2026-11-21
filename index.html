@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <link rel="icon" type="image/png" href="favicon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Design Prompt Generator Pro</title>
@@ -102,8 +101,8 @@
 
             <div id="outputArea" class="hidden mt-6">
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Prompt Hasil:</label>
-                <div class="bg-gray-100 p-4 rounded-xl border border-gray-200 text-gray-800 text-sm italic whitespace-pre-line" id="promptResult"></div>
-                <button onclick="copyPrompt()" id="copyBtn" class="mt-4 w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-medium flex items-center justify-center gap-2 transition">
+                <div class="bg-gray-100 p-4 rounded-xl border border-gray-200 text-gray-800 text-sm italic" id="promptResult"></div>
+                <button onclick="copyPrompt()" class="mt-4 w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-medium flex items-center justify-center gap-2">
                     <span>Salin Prompt</span>
                 </button>
             </div>
@@ -126,31 +125,47 @@
             const listItems = document.getElementById('listItems').value;
             const extraText = document.getElementById('extraText').value;
 
-            const allowText = document.getElementById('aiAllowText').checked;
-            const allowPhoto = document.getElementById('aiAllowPhoto').checked;
+            const allowAiText = document.getElementById('aiAllowText').checked;
+            const allowAiPhoto = document.getElementById('aiAllowPhoto').checked;
 
-            let prompt = `Create a ${style} ${type} design with dimensions ${w}cm x ${h}cm, using a ${color} color palette.\n\n`;
-            prompt += `Key Content: Main Text "${mainText}", Tagline "${tagline}", Contact Info ${wa}.\n`;
+            const prompt = `Create a professional high-quality ${type} design. 
+            Dimensions: ${w}cm x ${h}cm. 
+            Style: ${style}. 
+            Color Palette: ${color} theme. 
+            Key Content: Main Text "${mainText}", Tagline "${tagline}", Contact Info ${wa}. 
+            ${photoDescription ? 'Specific User Image/Object to include: ' + photoDescription + '. ' : ''}
+            ${additionalPhoto ? 'Additional image/photo detail: ' + additionalPhoto + '. ' : ''}
+            ${listItems ? 'Include following list items: ' + listItems + '. ' : ''}
+            ${extraText ? 'Additional notes: ' + extraText + '. ' : ''}
+            ${allowAiText ? 'AI is encouraged to generate creative supporting text elements to enhance the design. ' : 'Stick strictly to user provided text. '}
+            ${allowAiPhoto ? 'AI is encouraged to add relevant decorative images or photos to enhance the design. ' : 'Do not add extra decorative images. '}
+            The layout should be clean, balanced, with modern typography and visually appealing graphics that represent the content. High resolution, 8k, photorealistic style.`;
 
-            if (listItems.trim() !== "") {
-                prompt += `Additional list items to include: ${listItems}.\n`;
-            }
-            if (extraText.trim() !== "") {
-                prompt += `Extra notes/text: ${extraText}.\n`;
-            }
-            if (photoDescription.trim() !== "") {
-                prompt += `\nMain image/photo detail: ${photoDescription}.\n`;
-            }
-            if (additionalPhoto.trim() !== "") {
-                prompt += `Additional image/photo detail: ${additionalPhoto}.\n`;
-            }
-
-            prompt += `\n${allowText ? "AI is allowed to add relevant supporting text or headlines." : "Stick strictly to user provided text."}\n`;
-            prompt += `${allowPhoto ? "AI is encouraged to add relevant decorative images or photos to enhance the design." : "Use only the described photos without adding extra subjects."}\n`;
-            prompt += `The layout should be clean, balanced, with modern typography and visually appealing graphics that represent the content. High resolution, 8k, photorealistic style.`;
-
-            document.getElementById('promptResult').textContent = prompt;
+            document.getElementById('promptResult').innerText = prompt;
             document.getElementById('outputArea').classList.remove('hidden');
         }
 
         function copyPrompt() {
+            const text = document.getElementById('promptResult').innerText;
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-9999px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    alert("Prompt berhasil disalin ke clipboard!");
+                } else {
+                    alert("Gagal menyalin. Harap salin manual.");
+                }
+            } catch (err) {
+                alert("Terjadi kesalahan saat menyalin.");
+            }
+            document.body.removeChild(textArea);
+        }
+    </script>
+</body>
+</html>
